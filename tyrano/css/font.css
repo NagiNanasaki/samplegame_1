@@ -1,0 +1,9 @@
+/* ウェブフォントを使用する場合はここに定義を追加して下さい */
+
+@font-face {
+    font-family: "Mplus1SemiBold";
+    src: url("../../data/others/Mplus1-SemiBold.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+

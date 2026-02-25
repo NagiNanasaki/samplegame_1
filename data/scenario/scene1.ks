@@ -1,0 +1,238 @@
+*scene1
+
+;暗転中に背景を設定
+[fadeoutbgm time="100"]
+[bg storage="church.jpg" time=100]
+
+;暗転解除（クロスフェード）
+[mask_off time=3000]
+[fadeoutbgm time="100"]
+
+;メッセージウィンドウ再設定
+[free name="chara_name_area" layer="message0"]
+[position layer="message0" width="1280" height="275" top="447" left="0" visible="true"]
+[position layer="message0" frame="../others/plugin/thema_nagi_1/image/frame_message.png" margint="110" marginl="140" marginr="150" opacity="255" page="fore"]
+[ptext name="chara_name_area" layer="message0" color="0xf2f2f2" size="26" bold="bold" x="100" y="520"]
+[chara_config ptext="chara_name_area"]
+[font color="0xf2f2f2"]
+[deffont color="0xf2f2f2"]
+[tsw_button]
+
+# 主人公
+「……ん……」[p]
+
+[chara_show name="tensi" top=50]
+[playbgm storage="bgm1.mp3" loop="true"]
+
+# ???
+「やっと起きたかい」[p]
+
+#
+目を覚ますと、知らない場所で、知らない奴がいる。[p]
+
+# 主人公
+「……教会？それに誰だお前」[p]
+
+[chara_mod name="tensi" face="smile"]
+# ???
+「ああ。場所はどこでもよかったし、僕のことも知らなくていいよ」[p]
+
+# ???
+「ここは【サンプルゲーム】だよ」[p]
+
+# 主人公
+「……？」[p]
+
+#
+【サンプルゲーム】……？[p]
+
+[chara_mod name="tensi" face="warai"]
+[kanim name="tensi" keyframe="pyoko_s" time="300" count="2"]
+[playse storage="se_papa.mp3" ]
+# ???
+「あはは。面白い反応だね」[p]
+
+[chara_mod name="tensi" face="normal"]
+# ???
+「君の出番はここまでだよ。ここからは、ゲームにつけられる機能を紹介するね」[p]
+
+# ???
+「まずは、キャラクター関連の動きから見せるよ」[p]
+
+[chara_mod name="tensi" face="warai"]
+[kanim name="tensi" keyframe="pyoko_s" time="300" count="2"]
+[playse storage="se_papa.mp3" ]
+# ???
+「ふふ、君は面白いね」[p]
+
+[chara_mod name="tensi" face="angry"]
+[playse storage="ikari.mp3" ]
+# ???
+「……よくも、怒らせてくれたね」[p]
+
+[chara_mod name="tensi" face="normal"]
+# ???
+「――なんてね。びっくりした？」[p]
+
+[chara_mod name="tensi" face="kutiake"]
+# ???
+「こんな感じで、キャラクターのセリフに合わせて、動きや表情、効果音をつけられるよ」[p]
+
+# ???
+「次は、シーンチェンジを見せるね」[p]
+
+;TODO: シーンチェンジ演出を入れる
+
+[chara_mod name="tensi" face="smile"]
+# ???
+「こんなふうに、場面を切り替えることができるよ」[p]
+「あとは、スチルの表示もアニメーションを付けることができるよ」[p]
+「やってみるね」[p]
+
+
+[chara_mod name="tensi" face="normal"]
+# ???
+「次は、選択肢と分岐だ」[p]
+
+;選択肢
+[glink color="tswitch" text="選択肢A" target="*select_a" size="20" width="400" x="440" y="200"]
+[glink color="tswitch" text="選択肢B" target="*select_b" size="20" width="400" x="440" y="280"]
+[s]
+
+*select_a
+
+[chara_mod name="tensi" face="smile"]
+# ???
+「君は、Aを選んだね」[p]
+@jump target="*after_select"
+
+*select_b
+
+[chara_mod name="tensi" face="smile"]
+# ???
+「君は、Bを選んだね」[p]
+@jump target="*after_select"
+
+*after_select
+
+[chara_mod name="tensi" face="normal"]
+# ???
+「こんな感じで、選択によって展開を変えられる」[p]
+
+[chara_mod name="tensi" face="kutiake"]
+# ???
+「今回は見せないけど、もっと複雑な条件分岐もできるよ」[p]
+
+[chara_mod name="tensi" face="normal"]
+# ???
+「ところで、タイトル画面は見てくれたかな」[p]
+「もう一度見てみようか」[p]
+
+[movie storage="op_splash.mp4"]
+# ???
+「最初にブランドロゴや注意書きが出て、アニメーション付きでタイトル画面が表示されていたよね」[p]
+
+;[chara_mod name="tensi" face="smile"]
+# ???
+「CGモードや、コンフィグなどの機能も付けられるよ」[p]
+
+;[chara_mod name="tensi" face="normal"]
+# ???
+「それと、今見ている画面のUIデザインもできる」[p]
+
+[chara_mod name="tensi" face="kutiake"]
+# ???
+「UIっていうのは、メッセージウィンドウやスキップ、オートなどのシステムボタン、フォントのことだよ」[p]
+「ちなみに、このゲームではシステムボタンは上部にカーソルを合わせると出てくるよ」[p]
+
+[chara_mod name="tensi" face="normal"]
+# ???
+「それから、ボイスもつけられる」[p]
+
+;TODO: ボイス再生を入れる
+[chara_mod name="tensi" face="kutiake2"]
+[playse storage="voice1.wav"]
+[bgmopt volume="50"] 
+# ???
+「こんにちは。僕は天使」[p]
+
+[chara_mod name="tensi" face="metoji"]
+[bgmopt volume="100"] 
+# ???
+「……こんな感じ」[p]
+
+[chara_mod name="tensi" face="smile"]
+# ???
+「他にも必要な機能があれば、相談してね」[p]
+
+[chara_mod name="tensi" face="normal"]
+# ???
+「君の企画に合わせて、最適な形で実装できる」[p]
+
+
+;BGM徐々に停止--------------
+[fadeoutbgm time=1000]
+;SE停止-------------------
+[stopse]
+
+[chara_hide name="tensi"]
+
+;メモロビ風ここから--------------------------------------------------------
+    ; [camera]
+    ; 画像を描画する前に、レイヤー２のカメラを動かしておきます。
+    ; 画面の右下のほうを２倍ズームする形ですね。
+    [camera layer="1" time="1" zoom="2" y="-160" x="100"]
+
+    ;BGM徐々に再生
+    [playbgm storage="bgm12.ogg]
+    ;スチル表示のテンプレート1_暗転(白)からの表示-------
+    [fadeout_frame time="2000"]
+    ;暗転------------------------------
+    [mask time=1000 color=0xFFFFFF]
+    [image  layer="1"storage="star.png"  left="0" top="0"]
+    [camera layer="1" time="9000"wait="false" zoom="2" y="0" x="0" ease_type="ease"]
+    ;暗転解除！
+    [mask_off time=1000]
+    [wait time=3000]
+    ;---------------------------------
+
+    ; 時間をかけて画像をフェードインします。
+    [image  layer="2" time="6000" storage="star.png"]
+
+    ;ウィンドウのフェードイン
+    [fadein_frame time="2000"]
+
+    ;カメラ戻す
+    [camera layer="1" time="1" zoom="0" y="0" x="0"]
+
+;メモロビここまで--------------------------------------------------------
+
+
+/*
+シーン1終了
+*/
+
+
+
+;メッセージ消去・ウィンドウ非表示
+[cm]
+[layopt layer="message0" visible="false"]
+
+;BGM・SEフェードアウト
+[fadeoutbgm time=2000]
+[stopse]
+
+;白マスクで隠してからクリア
+[mask time=1500 color=0xFFFFFF]
+[freeimage layer="0"]
+[freeimage layer="1"]
+[freeimage layer="2"]
+[freeimage layer="3"]
+[camera layer="1" time="1" zoom="0" x="0" y="0"]
+[bg storage="white.png" time="0"]
+[mask_off time=0]
+
+;メッセージウィンドウ復帰・背景を部室に切り替え
+
+;タイトルに戻る
+@jump storage=title.ks target=*start

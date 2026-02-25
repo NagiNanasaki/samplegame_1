@@ -1,0 +1,54 @@
+<div>
+
+  <!-- 閉じるボタン -->
+  <div class="menu_item menu_close" style="float:right; margin:20px 10px 0 0">
+    <a href="javascript:void(0)">
+      <img src="data/others/plugin/thema_nagi_1/image/system/menu_button_close.png">
+    </a>
+  </div>
+
+  <div style="clear:both"></div>
+
+  <!-- ページ送りボタン -->
+  <img class="button_smart button_arrow_up"
+       src="data/others/plugin/thema_nagi_1/image/system/arrow_up.png"
+       style="cursor:pointer; left:540px; top:50px; position:absolute;">
+  <img class="button_smart button_arrow_down"
+       src="data/others/plugin/thema_nagi_1/image/system/arrow_down.png"
+       style="cursor:pointer; left:650px; top:50px; position:absolute;">
+
+  <!-- ロードスロット一覧 -->
+  <div class="area_save_list">
+    <ul class="save_list">
+      {{for array_save}}
+        <li class="save_display_area save_list_item" data-num="{{:num}}">
+          <span class="save_list_item_thumb">
+            {{if img_data != ""}}
+              <img src="{{:img_data}}">
+            {{/if}}
+          </span>
+          <span class="save_list_item_area">
+            <span class="save_list_item_date">{{:save_date}}</span>
+            <span class="save_list_item_text">{{:title}}</span>
+          </span>
+        </li>
+      {{/for}}
+    </ul>
+  </div>
+
+  <!-- 背景画像 -->
+  <img src="data/others/plugin/thema_nagi_1/image/system/menu_load_bg.jpg"
+       style="z-index:-1; left:0; top:0; width:100%; height:100%; position:absolute;">
+
+  <script class="menu_close">
+  $(".menu_item").on("mouseenter", function() {
+    var $img = $(this).find("img");
+    $img.data("orig-src", $img.attr("src"))
+        .attr("src", $img.attr("src").replace(".png", "2.png"));
+  }).on("mouseleave", function() {
+    var $img = $(this).find("img");
+    $img.attr("src", $img.data("orig-src"));
+  });
+  </script>
+
+</div>

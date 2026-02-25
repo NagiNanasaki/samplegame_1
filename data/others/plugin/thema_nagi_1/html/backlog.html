@@ -1,0 +1,62 @@
+<div class="display_menu">
+
+  <!-- 閉じるボタン -->
+  <div class="menu_item menu_close" style="float:right; margin:20px 10px 0 0">
+    <a href="javascript:void(0)">
+      <img src="data/others/plugin/thema_nagi_1/image/system/menu_button_close.png">
+    </a>
+  </div>
+
+  <!-- ページ送りボタン -->
+  <img class="button_smart button_arrow_up"
+       src="data/others/plugin/thema_nagi_1/image/system/arrow_up.png"
+       style="cursor:pointer; left:540px; top:50px; position:absolute;">
+  <img class="button_smart button_arrow_down"
+       src="data/others/plugin/thema_nagi_1/image/system/arrow_down.png"
+       style="cursor:pointer; left:650px; top:50px; position:absolute;">
+
+  <div style="clear:both"></div>
+
+  <!-- バックログ本文 -->
+  <div class="log_body" id="touchbox"></div>
+
+  <!-- 背景画像 -->
+  <img src="data/others/plugin/thema_nagi_1/image/system/menu_log_bg.jpg"
+       style="z-index:-1; left:0; top:0; width:100%; height:100%; position:absolute;">
+
+  <script>
+  // 閉じるボタンのホバー
+  $(".menu_close").on("mouseenter", function() {
+    var $img = $(this).find("img");
+    $img.data("orig-src", $img.attr("src"))
+        .attr("src", $img.attr("src").replace(".png", "2.png"));
+  }).on("mouseleave", function() {
+    var $img = $(this).find("img");
+    $img.attr("src", $img.data("orig-src"));
+  });
+  </script>
+
+  <script>
+  // タッチスクロール対応
+  $(function() {
+    var box = $("#touchbox")[0];
+    var startX, startY, startScrollX, startScrollY;
+
+    box.addEventListener("touchstart", function(e) {
+      var t = e.touches[0];
+      startX = t.pageX; startY = t.pageY;
+      startScrollX = $("#touchbox").scrollLeft();
+      startScrollY = $("#touchbox").scrollTop();
+    }, false);
+
+    box.addEventListener("touchmove", function(e) {
+      e.preventDefault();
+      var t = e.touches[0];
+      $("#touchbox")
+        .scrollLeft(startScrollX + (startX - t.pageX))
+        .scrollTop(startScrollY  + (startY - t.pageY));
+    }, false);
+  });
+  </script>
+
+</div>
