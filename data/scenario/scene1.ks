@@ -175,6 +175,7 @@ TYRANO.kag.layer.getLayer("1","fore").animate({opacity:1}, 5000);
 [fadeout_frame time="1000"]
 
 ;シーンチェンジで教会に戻る
+[mask_rule graphic="church.jpg" rule="030.png" folder="bgimage" time="1500"]
 [iscript]
 TYRANO.kag.layer.getLayer("1","fore").css({
     "background-image": "",
@@ -183,7 +184,6 @@ TYRANO.kag.layer.getLayer("1","fore").css({
     "opacity": ""
 });
 [endscript]
-[mask_rule graphic="church.jpg" rule="030.png" folder="bgimage" time="1500"]
 [bg storage="church.jpg" time=0]
 [reset_camera layer="base" time="1"]
 [mask_off_rule rule="030.png" time=1]
@@ -287,6 +287,7 @@ var _check = setInterval(function() {
 [fadeoutbgm time=1000]
 ;SE停止-------------------
 [stopse]
+[mask time="800" color="0x000000"]
 [chara_hide name="tensi"]
 
 /*
