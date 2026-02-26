@@ -82,19 +82,18 @@
 # ???
 「次は、シーンチェンジを見せるね」[p]
 
+# 
+
+
 ;シーンチェンジ演出（廊下へ）
 [chara_hide name="tensi"]
 [mask_rule graphic="rouka.jpg" rule="032.png" folder="bgimage" time="1500"]
 [bg storage="rouka.jpg" time=0]
-[iscript]
-TYRANO.kag.layer.getLayer("message0","fore").css("opacity",0).hide();
-[endscript]
+[transparent_frame]
 [mask_off_rule rule="032.png" time=1]
 [wait time="300"]
-[iscript]
-TYRANO.kag.layer.getLayer("message0","fore").show().animate({opacity:1},400);
-[endscript]
-[chara_show name="tensi" top=50 time=400]
+[fadein_frame time="400"]
+[chara_show name="tensi" top=50]
 
 [chara_mod name="tensi" face="normal"]
 # ???
@@ -176,10 +175,17 @@ TYRANO.kag.layer.getLayer("1","fore").animate({opacity:1}, 5000);
 [fadeout_frame time="1000"]
 
 ;シーンチェンジで教会に戻る
-[reset_camera layer="base" time="1"]
-[freeimage layer="1"]
+[iscript]
+TYRANO.kag.layer.getLayer("1","fore").css({
+    "background-image": "",
+    "background-size": "",
+    "background-position": "",
+    "opacity": ""
+});
+[endscript]
 [mask_rule graphic="church.jpg" rule="030.png" folder="bgimage" time="1500"]
 [bg storage="church.jpg" time=0]
+[reset_camera layer="base" time="1"]
 [mask_off_rule rule="030.png" time=1]
 [wait time="300"]
 [fadein_frame time="1000"]
@@ -190,8 +196,8 @@ TYRANO.kag.layer.getLayer("1","fore").animate({opacity:1}, 5000);
 「次は、選択肢と分岐だ」[p]
 
 ;選択肢
-[glink color="tswitch" text="選択肢A" target="*select_a" size="20" width="400" x="440" y="200"]
-[glink color="tswitch" text="選択肢B" target="*select_b" size="20" width="400" x="440" y="280"]
+[glink color="tswitch" text="選択肢A" target="*select_a" size="20" width="400" x="400" y="300"]
+[glink color="tswitch" text="選択肢B" target="*select_b" size="20" width="400" x="400" y="380"]
 [s]
 
 *select_a
@@ -294,4 +300,4 @@ var _check = setInterval(function() {
 [layopt layer="message0" visible="false"]
 
 ;タイトルに戻る
-@jump storage=title.ks target=*start
+@jump storage=title.ks

@@ -1,6 +1,6 @@
 ;一番最初に呼び出されるファイル
 
-[title name="ティラノスクリプト解説"]
+[title name="サンプルゲーム"]
 
 [stop_keyconfig]
 
@@ -23,7 +23,7 @@ $(".layer_menu").hide();
 [plugin name="opening_splash"]
 
 ;テーマプラグイン読み込み
-[plugin name="thema_nagi_1" fade="on" btn_pos="top"]
+[plugin name="thema_nagi_1" fade="off" btn_pos="bottom"]
 @layopt layer="message0" visible=false
 [hidemenubutton]
 
