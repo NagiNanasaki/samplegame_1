@@ -22,7 +22,7 @@
 「……ん……」[p]
 
 [chara_show name="tensi" top=50]
-[playbgm storage="bgm1.mp3" loop="true"]
+[playbgm storage="bgm1.mp3" loop="true" volume="80" ]
 
 # ???
 「やっと起きたかい」[p]
@@ -66,13 +66,14 @@
 「ふふ、君は面白いね」[p]
 
 [chara_mod name="tensi" face="angry"]
+[kanim name="tensi" keyframe="pyoko_s" time="300" count="1"]
 [playse storage="ikari.mp3" ]
 # ???
-「……よくも、怒らせてくれたね」[p]
+「……もう、怒るよ」[p]
 
 [chara_mod name="tensi" face="normal"]
 # ???
-「――なんてね。びっくりした？」[p]
+「――なんてね。」[p]
 
 [chara_mod name="tensi" face="kutiake"]
 # ???
@@ -81,14 +82,108 @@
 # ???
 「次は、シーンチェンジを見せるね」[p]
 
-;TODO: シーンチェンジ演出を入れる
+;シーンチェンジ演出（廊下へ）
+[chara_hide name="tensi"]
+[mask_rule graphic="rouka.jpg" rule="032.png" folder="bgimage" time="1500"]
+[bg storage="rouka.jpg" time=0]
+[iscript]
+TYRANO.kag.layer.getLayer("message0","fore").css("opacity",0).hide();
+[endscript]
+[mask_off_rule rule="032.png" time=1]
+[wait time="300"]
+[iscript]
+TYRANO.kag.layer.getLayer("message0","fore").show().animate({opacity:1},400);
+[endscript]
+[chara_show name="tensi" top=50 time=400]
+
+[chara_mod name="tensi" face="normal"]
+# ???
+「…教室だね」[p]
 
 [chara_mod name="tensi" face="smile"]
+# ???
+「戻るね」[p]
+
+;元の背景（教会）へ戻る
+[iscript]
+TYRANO.kag.layer.getLayer("message0","fore").animate({opacity:0},400);
+[endscript]
+[chara_hide name="tensi"]
+[wait time="450"]
+[layopt layer="message0" visible="false"]
+[iscript]
+TYRANO.kag.layer.getLayer("message0","fore").css("opacity","");
+[endscript]
+[mask_rule graphic="church.jpg" rule="030.png" folder="bgimage" time="1500"]
+[bg storage="church.jpg" time=0]
+[mask_off_rule rule="030.png" time=1]
+[wait time="300"]
+[layopt layer="message0" visible="true"]
+[chara_show name="tensi" top=50]
+
+[chara_mod name="tensi" face="smile"]
+[kanim name="tensi" keyframe="pyoko_s" time="300" count="2"]
 # ???
 「こんなふうに、場面を切り替えることができるよ」[p]
 「あとは、スチルの表示もアニメーションを付けることができるよ」[p]
 「やってみるね」[p]
 
+;--- スチル演出（メモロビ風）---
+;UIとキャラをフェードアウト
+[fadeout_frame time="2000"]
+[chara_hide name="tensi"]
+
+;白暗転
+[mask time="1000" color="0xffffff"]
+
+;スチルをベースレイヤーにセット・カメラを右下2倍ズームにセット
+[bg storage="star.png" time=0]
+[camera layer="base" time="1" zoom="2" y="-160" x="100"]
+
+;layer1に全体画像をセット（透明状態・マスク中なので見えない）
+[iscript]
+var $l = TYRANO.kag.layer.getLayer("1","fore");
+$l.css({
+    "background-image": "url('./data/image/star.png')",
+    "background-size": "cover",
+    "background-position": "center",
+    "opacity": 0
+});
+[endscript]
+
+;カメラパン開始（右下→中央、9秒、ノンブロッキング）
+[camera layer="base" time="9000" wait="false" zoom="2" y="0" x="0" ease_type="ease"]
+
+;白暗転解除
+[mask_off time="1000"]
+[wait time="1000"]
+
+;全体画像フェードイン（カメラパン中に重ねる）
+[iscript]
+TYRANO.kag.layer.getLayer("1","fore").animate({opacity:1}, 5000);
+[endscript]
+[wait time="5000"]
+
+;メッセージウィンドウフェードイン
+[fadein_frame time="1500"]
+
+# ???
+「…こんな感じ」[p]
+
+「戻るね」[p]
+
+;メッセージウィンドウフェードアウト
+[fadeout_frame time="1000"]
+
+;シーンチェンジで教会に戻る
+[reset_camera layer="base" time="1"]
+[freeimage layer="1"]
+[mask_rule graphic="church.jpg" rule="030.png" folder="bgimage" time="1500"]
+[bg storage="church.jpg" time=0]
+[mask_off_rule rule="030.png" time=1]
+[wait time="300"]
+[fadein_frame time="1000"]
+[chara_show name="tensi" top=50 time=400]
 
 [chara_mod name="tensi" face="normal"]
 # ???
@@ -128,6 +223,18 @@
 「ところで、タイトル画面は見てくれたかな」[p]
 「もう一度見てみようか」[p]
 
+[iscript]
+var _check = setInterval(function() {
+    var v = document.getElementById("bgmovie");
+    if (v) {
+        clearInterval(_check);
+        v.style.width  = "640px";
+        v.style.height = "360px";
+        v.style.left   = "320px";
+        v.style.top    = "180px";
+    }
+}, 10);
+[endscript]
 [movie storage="op_splash.mp4"]
 # ???
 「最初にブランドロゴや注意書きが出て、アニメーション付きでタイトル画面が表示されていたよね」[p]
@@ -174,39 +281,7 @@
 [fadeoutbgm time=1000]
 ;SE停止-------------------
 [stopse]
-
 [chara_hide name="tensi"]
-
-;メモロビ風ここから--------------------------------------------------------
-    ; [camera]
-    ; 画像を描画する前に、レイヤー２のカメラを動かしておきます。
-    ; 画面の右下のほうを２倍ズームする形ですね。
-    [camera layer="1" time="1" zoom="2" y="-160" x="100"]
-
-    ;BGM徐々に再生
-    [playbgm storage="bgm12.ogg]
-    ;スチル表示のテンプレート1_暗転(白)からの表示-------
-    [fadeout_frame time="2000"]
-    ;暗転------------------------------
-    [mask time=1000 color=0xFFFFFF]
-    [image  layer="1"storage="star.png"  left="0" top="0"]
-    [camera layer="1" time="9000"wait="false" zoom="2" y="0" x="0" ease_type="ease"]
-    ;暗転解除！
-    [mask_off time=1000]
-    [wait time=3000]
-    ;---------------------------------
-
-    ; 時間をかけて画像をフェードインします。
-    [image  layer="2" time="6000" storage="star.png"]
-
-    ;ウィンドウのフェードイン
-    [fadein_frame time="2000"]
-
-    ;カメラ戻す
-    [camera layer="1" time="1" zoom="0" y="0" x="0"]
-
-;メモロビここまで--------------------------------------------------------
-
 
 /*
 シーン1終了
@@ -217,22 +292,6 @@
 ;メッセージ消去・ウィンドウ非表示
 [cm]
 [layopt layer="message0" visible="false"]
-
-;BGM・SEフェードアウト
-[fadeoutbgm time=2000]
-[stopse]
-
-;白マスクで隠してからクリア
-[mask time=1500 color=0xFFFFFF]
-[freeimage layer="0"]
-[freeimage layer="1"]
-[freeimage layer="2"]
-[freeimage layer="3"]
-[camera layer="1" time="1" zoom="0" x="0" y="0"]
-[bg storage="white.png" time="0"]
-[mask_off time=0]
-
-;メッセージウィンドウ復帰・背景を部室に切り替え
 
 ;タイトルに戻る
 @jump storage=title.ks target=*start
