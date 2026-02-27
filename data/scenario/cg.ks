@@ -1,101 +1,122 @@
 ;=========================================
-; CG モード　画面作成
+; CG モード　画面作成（theme_kopanda_09 ベース）
 ;=========================================
 
-@layopt layer=message0 visible=false
-
-@clearfix
+[layopt layer=message0 visible=false]
+[layopt layer=0 visible=true]
+[layopt layer=1 visible=true]
 [hidemenubutton]
+[clearfix]
 [cm]
 
-[bg storage="../../tyrano/images/system/bg_base.png" time=100]
-[layopt layer=1 visible=true]
-
-[image layer=1 left=0 top=0 storage="config/label_cg.png" folder="image" ]
-
+[bg storage="../image/append_theme/bg_gallery.png" time=300]
 [iscript]
-    
-    tf.page = 0;
-    tf.selected_cg_image = ""; //選択されたCGを一時的に保管
-    
+anime({targets:'#exit_overlay', opacity:[1,0], duration:300, easing:'easeOutQuad', complete:function(){ $('#exit_overlay').remove(); }});
+$('#title_ui').css('opacity', '0');
 [endscript]
 
+[iscript]
+tf.page              = 0;
+tf.selected_cg_image = [];
+tf.cg_index          = 0;
+[endscript]
 
+[jump target=*cgpage]
 
+;-----------------------------------------------------------
 *cgpage
-[layopt layer=1 visible=true]
-
+;-----------------------------------------------------------
 [cm]
-[button graphic="config/menu_button_close.png" enterimg="config/menu_button_close2.png"  target="*backtitle" x=1150 y=40 ]
 
-[iscript]
-    tf.tmp_index = 0;
-    tf.cg_index = 12 * tf.page;
-    tf.top = 100;
-    tf.left = 60;
-    
-[endscript]
+[button graphic="append_theme/gallery_close.png" enterimg="append_theme/gallery_close2.png" target=*backtitle x=1170 y=20]
 
-[iscript]
-	tf.target_page = "page_"+tf.page;
-[endscript]
+[jump target="& 'page_' + tf.page "]
 
-*cgview
-@jump target=&tf.target_page
-
+;-------------------------------------------------------
 *page_0
-[cg_image_button graphic="rouka.jpg,room.jpg,title.png" no_graphic="../../tyrano/images/system/noimage.png" x=60 y=130 width=160 height=140 folder="bgimage" ]
-[cg_image_button graphic="room.jpg" no_graphic="../../tyrano/images/system/noimage.png" x=250 y=130 width=160 height=140 folder="bgimage" ]
+;-------------------------------------------------------
 
-@jump target="*common"
+; 一段目
+[cg_image_button graphic="rouka.jpg,room.jpg,title.png" no_graphic="../image/append_theme/lock.png" x=240 y=184 width=252 height=142 folder=bgimage]
+[cg_image_button graphic="room.jpg" no_graphic="../image/append_theme/lock.png" x=512 y=184 width=252 height=142 folder=bgimage]
+[cg_image_button graphic="" no_graphic="../image/append_theme/lock.png" x=784 y=184 width=252 height=142]
 
+; 二段目
+[cg_image_button graphic="" no_graphic="../image/append_theme/lock.png" x=240 y=349 width=252 height=142]
+[cg_image_button graphic="" no_graphic="../image/append_theme/lock.png" x=512 y=349 width=252 height=142]
+[cg_image_button graphic="" no_graphic="../image/append_theme/lock.png" x=784 y=349 width=252 height=142]
+
+; 三段目
+[cg_image_button graphic="" no_graphic="../image/append_theme/lock.png" x=240 y=514 width=252 height=142]
+[cg_image_button graphic="" no_graphic="../image/append_theme/lock.png" x=512 y=514 width=252 height=142]
+[cg_image_button graphic="" no_graphic="../image/append_theme/lock.png" x=784 y=514 width=252 height=142]
+
+[jump target=*common]
+
+;-------------------------------------------------------
 *common
-
-
-*endpage
-
-
+;-------------------------------------------------------
 
 [s]
 
+;-----------------------------------------------------------
 *backtitle
+;-----------------------------------------------------------
 [cm]
+[freeimage layer=0]
 [freeimage layer=1]
-@jump storage=title.ks
 
+[iscript]
+$('#title_ui').css({'opacity':'', 'pointer-events':'none'});
+$('.title-btn').css('pointer-events', 'all');
+[endscript]
+
+[awakegame]
+
+;-----------------------------------------------------------
 *nextpage
-[emb exp="tf.page++;"]
-@jump target="*cgpage"
+;-----------------------------------------------------------
+[eval exp=tf.page++]
+[jump target=*cgpage]
 
+;-----------------------------------------------------------
+*prevpage
+;-----------------------------------------------------------
+[eval exp=tf.page--]
+[jump target=*cgpage]
 
-*backpage
-[emb exp="tf.page--;"]
-@jump target="*cgpage"
-
-*clickcg
-[cm]
-
-[layopt layer=1 visible=false]
-
-[eval exp="tf.cg_index=0"]
-
-*cg_next_image
-
-[image storage=&tf.selected_cg_image[tf.cg_index] folder="bgimage"  ]
-[l]
-[bg storage="../../tyrano/images/system/bg_base.png" time=10]
-
-[eval exp="tf.cg_index++"]
-
-@jump target="cg_next_image" cond="tf.selected_cg_image.length > tf.cg_index"
-
-
-@jump  target=*cgpage
-[s]
-
+;-----------------------------------------------------------
 *no_image
+;-----------------------------------------------------------
+[jump target=*cgpage]
 
-@jump  target=*cgpage
+;-----------------------------------------------------------
+*clickcg
+;-----------------------------------------------------------
+[cm]
+[freeimage layer=1 page=back]
 
+[eval exp="tf.cg_index = 0"]
 
+;-------------------------------------------------------
+*cg_next_image
+;-------------------------------------------------------
+[iscript]
+tf.storage = tf.selected_cg_image[tf.cg_index];
+[endscript]
 
+[freeimage layer=1 page=back]
+[image layer=1 page=back storage=&tf.storage folder=bgimage width=1280 height=720]
+[trans layer=1 time=700]
+[wt]
+[l]
+
+[eval exp=tf.cg_index++]
+
+[if exp="tf.selected_cg_image.length > tf.cg_index"]
+  [jump target=cg_next_image]
+[else]
+  [freeimage layer=1 page=back]
+  [freeimage layer=1 page=fore time=700]
+  [jump target=*cgpage]
+[endif]

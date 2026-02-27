@@ -44,8 +44,11 @@
 [layopt layer="4" visible="true"]
 [layopt layer="5" visible="true"]
 
-;ゆっくり暗転
-[mask time=1000 color=0x000000]
+;カスタム黒オーバーレイを除去して瞬間マスク（title.ksのフェードと連携）
+[iscript]
+$('#ng_black').remove();
+[endscript]
+[mask time="1" color="0x000000"]
 
 ;scene1へジャンプ
 @jump storage=scene1.ks target=*scene1
