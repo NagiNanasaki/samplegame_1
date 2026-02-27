@@ -44,11 +44,11 @@
 [layopt layer="4" visible="true"]
 [layopt layer="5" visible="true"]
 
-;カスタム黒オーバーレイを除去して瞬間マスク（title.ksのフェードと連携）
+;マスクを先に適用してからカスタム黒オーバーレイを除去（ちらつき防止）
+[mask time="1" color="0x000000"]
 [iscript]
 $('#ng_black').remove();
 [endscript]
-[mask time="1" color="0x000000"]
 
 ;scene1へジャンプ
 @jump storage=scene1.ks target=*scene1

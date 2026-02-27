@@ -102,7 +102,7 @@ anime({
   translateY: [-30, 0],
   duration: 1000,
   easing: 'easeOutCubic',
-  delay: 2000
+  delay: 3100
 });
 
 // ボタン staggered フェードイン（左→右の順に時間差で出現）
@@ -112,7 +112,7 @@ anime({
   translateY: [15, 0],
   duration: 700,
   easing: 'easeOutCubic',
-  delay: anime.stagger(120, {start: 2700})
+  delay: anime.stagger(120, {start: 4200})
 });
 
 
