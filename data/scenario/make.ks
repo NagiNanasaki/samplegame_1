@@ -6,5 +6,9 @@
 ;
 
 ;make.ks はロード時にcallとして呼ばれるため、return必須です。
+
+; tf._ts（thema_nagi_1の状態変数）はawakegame後にclearTmpVariableで消えるため、ここで再初期化する
+[plugin name="thema_nagi_1" fade="off" btn_pos="bottom"]
+
 [return]
 

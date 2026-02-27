@@ -139,6 +139,16 @@ $('.title-orb').each(function(i, orb) {
   });
 });
 
+// ホバーSE
+$('.title-btn').on('mouseenter', function() {
+  TYRANO.kag.ftag.startTag('playse', {storage:'piano_po-n.mp3'});
+});
+
+// クリックSE
+$('.title-btn').on('click', function() {
+  TYRANO.kag.ftag.startTag('playse', {storage:'start.mp3'});
+});
+
 $('#tbtn_newgame').on('click', function(e) {
   e.stopPropagation();
   $('.tyrano_base').append('<div id="ng_black" style="position:absolute;top:0;left:0;width:1280px;height:720px;background:#000;z-index:99999;opacity:0;pointer-events:none;"></div>');

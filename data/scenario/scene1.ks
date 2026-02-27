@@ -1,12 +1,12 @@
 *scene1
 
 ;暗転中に背景を設定
-[fadeoutbgm time="100"]
+[stopbgm]
 [bg storage="church.jpg" time=100]
 
 ;暗転解除（クロスフェード）
 [mask_off time=3000]
-[fadeoutbgm time="100"]
+[stopbgm]
 
 ;メッセージウィンドウ再設定
 [free name="chara_name_area" layer="message0"]
