@@ -134,20 +134,25 @@ TYRANO.kag.layer.getLayer("message0","fore").css("opacity","");
 「やってみるね」[p]
 
 ;--- スチル演出（メモロビ風）---
-[cancelskip]
 [stop_keyconfig]
+[cancelskip]
+[iscript]
+$('.fixlayer').css('pointer-events','none');
+[endscript]
 ;UIとキャラをフェードアウト
 [fadeout_frame time="2000"]
 [chara_hide name="tensi"]
 
-;白暗転
+;白暗転（[mask]使用・[start_keyconfig]なし・[stop_keyconfig]維持）
+[cancelskip]
+[mask_off time=1]
 [mask time="1000" color="0xffffff"]
 
 ;スチルをベースレイヤーにセット・カメラを右下2倍ズームにセット
 [bg storage="star.png" time=0]
 [camera layer="base" time="1" zoom="2" y="-160" x="100"]
 
-;layer1に全体画像をセット（透明状態・マスク中なので見えない）
+;layer1に全体画像をセット（透明状態）
 [iscript]
 var $l = TYRANO.kag.layer.getLayer("1","fore");
 $l.css({
@@ -162,14 +167,16 @@ $l.css({
 [camera layer="base" time="9000" wait="false" zoom="2" y="0" x="0" ease_type="ease"]
 
 ;白暗転解除
+[cancelskip]
 [mask_off time="1000"]
-[wait time="1000"]
 
 ;全体画像フェードイン（カメラパン中に重ねる）
+[cancelskip]
 [iscript]
-TYRANO.kag.layer.getLayer("1","fore").animate({opacity:1}, 5000);
+var $l = TYRANO.kag.layer.getLayer("1","fore");
+$l.animate({opacity:1}, 9000);
 [endscript]
-[wait time="5000"]
+[wait time="8000"]
 
 ;メッセージウィンドウフェードイン
 [fadein_frame time="1500"]
@@ -180,29 +187,39 @@ TYRANO.kag.layer.getLayer("1","fore").animate({opacity:1}, 5000);
 
 「戻るね」[p]
 
-;メッセージウィンドウフェードアウト
-[fadeout_frame time="1000"]
-
-;シーンチェンジで教会に戻る
-[mask_rule graphic="church.jpg" rule="030.png" folder="bgimage" time="1500"]
+[stop_keyconfig]
+[cancelskip]
+;黒フェードで全体を暗転
+[mask time="800" color="0x000000"]
+;暗転中にlayer1・カメラ・背景・ウィンドウをリセット
 [iscript]
-TYRANO.kag.layer.getLayer("1","fore").css({
-    "background-image": "",
-    "background-size": "",
-    "background-position": "",
-    "opacity": ""
-});
+var $l = TYRANO.kag.layer.getLayer("1","fore");
+$l.stop();
+$l.css({"background-image":"","background-size":"","background-position":"","opacity":""});
+$(".message0_fore").children().stop(true, true).css("opacity", 0);
+$(".fixlayer").stop(true, true).css("opacity", 0);
 [endscript]
-[bg storage="church.jpg" time=0]
 [reset_camera layer="base" time="1"]
-[mask_off_rule rule="030.png" time=1]
+[bg storage="church.jpg" time=0]
+[cm]
+;暗転解除（教会フェードイン）
+[mask_off time="1000"]
 [wait time="300"]
-[fadein_frame time="1000"]
+;ウィンドウ・ボタンをフェードイン
+[iscript]
+$(".message0_fore").children().stop(true, true).animate({opacity: 1}, 1000);
+$(".fixlayer").stop(true, true).animate({opacity: 1}, 1000);
+[endscript]
+[wait time="1000"]
 [chara_show name="tensi" top=50 time=400]
+[start_keyconfig]
 
 [chara_mod name="tensi" face="normal"]
 # ???
 「次は、選択肢と分岐だ」[p]
+[iscript]
+$('.fixlayer').css('pointer-events','');
+[endscript]
 
 ;選択肢
 [glink color="tswitch" text="選択肢A" target="*select_a" size="20" width="400" x="400" y="300"]
