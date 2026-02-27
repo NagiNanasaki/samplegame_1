@@ -49,6 +49,8 @@
 [chara_mod name="tensi" face="warai"]
 [kanim name="tensi" keyframe="pyoko_s" time="300" count="2"]
 [playse storage="se_papa.mp3" ]
+[wait time="300"]
+[playse storage="se_papa.mp3" ]
 # ???
 「あはは。面白い反応だね」[p]
 
@@ -62,15 +64,19 @@
 [chara_mod name="tensi" face="warai"]
 [kanim name="tensi" keyframe="pyoko_s" time="300" count="2"]
 [playse storage="se_papa.mp3" ]
+[wait time="300"]
+[playse storage="se_papa.mp3" ]
 # ???
 「ふふ、君は面白いね」[p]
 
 [chara_mod name="tensi" face="angry"]
+[image layer=2 page=fore storage="ikari_icon.png" folder=image name="ikari" x=655 y=120 width=90 height=90]
 [kanim name="tensi" keyframe="pyoko_s" time="300" count="1"]
 [playse storage="ikari.mp3" ]
 # ???
 「……もう、怒るよ」[p]
 
+[free layer=2 name="ikari"]
 [chara_mod name="tensi" face="normal"]
 # ???
 「――なんてね。」[p]
@@ -128,6 +134,8 @@ TYRANO.kag.layer.getLayer("message0","fore").css("opacity","");
 「やってみるね」[p]
 
 ;--- スチル演出（メモロビ風）---
+[cancelskip]
+[stop_keyconfig]
 ;UIとキャラをフェードアウト
 [fadeout_frame time="2000"]
 [chara_hide name="tensi"]
@@ -165,6 +173,7 @@ TYRANO.kag.layer.getLayer("1","fore").animate({opacity:1}, 5000);
 
 ;メッセージウィンドウフェードイン
 [fadein_frame time="1500"]
+[start_keyconfig]
 
 # ???
 「…こんな感じ」[p]
@@ -238,10 +247,11 @@ var _check = setInterval(function() {
         v.style.height = "360px";
         v.style.left   = "320px";
         v.style.top    = "180px";
+        v.currentTime  = 3.5;
     }
 }, 10);
 [endscript]
-[movie storage="op_splash.mp4"]
+[movie storage="gameplay_demo.mp4"]
 # ???
 「最初にブランドロゴや注意書きが出て、アニメーション付きでタイトル画面が表示されていたよね」[p]
 

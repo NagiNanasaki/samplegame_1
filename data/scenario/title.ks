@@ -106,13 +106,15 @@ anime({
 });
 
 // ボタン staggered フェードイン（左→右の順に時間差で出現）
+var _btnReady = false;
 anime({
   targets: '.title-btn',
   opacity: [0, 1],
   translateY: [15, 0],
   duration: 700,
   easing: 'easeOutCubic',
-  delay: anime.stagger(120, {start: 4200})
+  delay: anime.stagger(120, {start: 4200}),
+  complete: function() { _btnReady = true; }
 });
 
 
@@ -141,6 +143,7 @@ $('.title-orb').each(function(i, orb) {
 
 // ホバーSE
 $('.title-btn').on('mouseenter', function() {
+  if (!_btnReady) return;
   TYRANO.kag.ftag.startTag('playse', {storage:'piano_po-n.mp3'});
 });
 
