@@ -66,12 +66,8 @@ tf.cg_index          = 0;
 [freeimage layer=0]
 [freeimage layer=1]
 
-[iscript]
-$('#title_ui').css({'opacity':'', 'pointer-events':'none'});
-$('.title-btn').css('pointer-events', 'all');
-[endscript]
-
-[awakegame]
+[clearstack]
+[jump storage="title.ks"]
 
 ;-----------------------------------------------------------
 *nextpage

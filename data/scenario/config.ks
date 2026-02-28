@@ -229,7 +229,7 @@ $('#title_ui').css('opacity', '0');
 	[clearfix]
 	[start_keyconfig]
 	[clearstack]
-	[awakegame]
+	[jump storage="title.ks"]
 
 ;================================================================================
 ; ボタンクリック時の処理

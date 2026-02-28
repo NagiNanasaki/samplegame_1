@@ -326,6 +326,7 @@ var _check = setInterval(function() {
 ;メッセージ消去・ウィンドウ非表示
 [cm]
 [layopt layer="message0" visible="false"]
+[clearfix name="role_button"]
 
 ;タイトルに戻る
 @jump storage=title.ks

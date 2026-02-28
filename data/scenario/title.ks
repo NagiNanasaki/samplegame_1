@@ -13,7 +13,9 @@ $('.tyrano_base').append('<div id="title_fade_overlay" style="position:absolute;
 @mask_off time="0"
 
 *start
+[if exp="!tf._title_skip_anim"]
 [playbgm storage="op.mp3"]
+[endif]
 
 [iscript]
 $('#title_ui').remove();
@@ -68,67 +70,54 @@ $('.tyrano_base').append(
   '</div></div>'
 );
 
+// Config/Extraから戻った場合はアニメーションをスキップ
+var _skipAnim = !!(tf._title_skip_anim);
+tf._title_skip_anim = false;
+
 // 背景フェードイン（白オーバーレイをフェードアウト）
 anime({
   targets: '#title_fade_overlay',
   opacity: [1, 0],
-  duration: 1500,
+  duration: _skipAnim ? 600 : 1500,
   easing: 'easeOutQuad',
   complete: function() { $('#title_fade_overlay').remove(); }
 });
 
-// 霞 フェードイン（先に出す）
-anime({
-  targets: '#title_haze',
-  opacity: [0, 1],
-  duration: 800,
-  easing: 'easeOutQuad',
-  delay: 1200
-});
-
-// キャラクター フェードイン（霞より少し後）
-anime({
-  targets: '#title_chara',
-  opacity: [0, 1],
-  duration: 800,
-  easing: 'easeOutQuad',
-  delay: 1800
-});
-
-// ロゴ フェードイン（上から滑り込み）
-anime({
-  targets: '#title_logo',
-  opacity: [0, 1],
-  translateY: [-30, 0],
-  duration: 1000,
-  easing: 'easeOutCubic',
-  delay: 3100
-});
-
-// ボタン staggered フェードイン（左→右の順に時間差で出現）
+// 霞・キャラ・ロゴ・ボタンのフェードイン
 var _btnReady = false;
-anime({
-  targets: '.title-btn',
-  opacity: [0, 1],
-  translateY: [15, 0],
-  duration: 700,
-  easing: 'easeOutCubic',
-  delay: anime.stagger(120, {start: 4200}),
-  complete: function() { _btnReady = true; }
-});
+if (_skipAnim) {
+  // Config/Extraから戻った場合：アニメーションなしで即表示
+  $('#title_haze').css('opacity', 1);
+  $('#title_chara').css('opacity', 1);
+  $('#title_logo').css('opacity', 1);
+  $('.title-btn').css('opacity', 1);
+  _btnReady = true;
+} else {
+  // 通常のフェードインアニメーション
+  anime({ targets: '#title_haze', opacity: [0, 1], duration: 800, easing: 'easeOutQuad', delay: 1200 });
+  anime({ targets: '#title_chara', opacity: [0, 1], duration: 800, easing: 'easeOutQuad', delay: 1800 });
+  anime({ targets: '#title_logo', opacity: [0, 1], translateY: [-30, 0], duration: 1000, easing: 'easeOutCubic', delay: 3100 });
+  anime({
+    targets: '.title-btn',
+    opacity: [0, 1],
+    translateY: [15, 0],
+    duration: 700,
+    easing: 'easeOutCubic',
+    delay: anime.stagger(120, {start: 4200}),
+    complete: function() { _btnReady = true; }
+  });
+}
 
 
 // 光の玉 浮遊アニメーション
 var orbOpacity = [0.7, 0.55, 0.65, 0.6, 0.5, 0.6, 0.45, 0.65, 0.5, 0.6, 0.4, 0.55, 0.7, 0.5, 0.6, 0.5, 0.55, 0.45, 0.4];
 var orbDirX = [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1];
 $('.title-orb').each(function(i, orb) {
-  anime({
-    targets: orb,
-    opacity: [0, orbOpacity[i]],
-    duration: 1800,
-    easing: 'easeOutQuad',
-    delay: 3900 + i * 250
-  });
+  if (_skipAnim) {
+    $(orb).css('opacity', orbOpacity[i]);
+  } else {
+    anime({ targets: orb, opacity: [0, orbOpacity[i]], duration: 1800, easing: 'easeOutQuad', delay: 3900 + i * 250 });
+  }
   anime({
     targets: orb,
     translateY: -(45 + i * 10),
@@ -137,7 +126,7 @@ $('.title-orb').each(function(i, orb) {
     easing: 'easeInOutSine',
     direction: 'alternate',
     loop: true,
-    delay: 3900 + i * 250
+    delay: _skipAnim ? 0 : (3900 + i * 250)
   });
 });
 
@@ -203,7 +192,8 @@ $('#tbtn_config').on('click', function(e) {
     duration: 150,
     easing: 'easeInQuad',
     complete: function() {
-      TYRANO.kag.ftag.startTag('sleepgame', {storage:'config.ks', target:''});
+      tf._title_skip_anim = true;
+      TYRANO.kag.ftag.startTag('jump', {storage:'config.ks', target:''});
     }
   });
 });
@@ -217,7 +207,8 @@ $('#tbtn_extra').on('click', function(e) {
     duration: 150,
     easing: 'easeInQuad',
     complete: function() {
-      TYRANO.kag.ftag.startTag('sleepgame', {storage:'cg.ks', target:''});
+      tf._title_skip_anim = true;
+      TYRANO.kag.ftag.startTag('jump', {storage:'cg.ks', target:''});
     }
   });
 });
