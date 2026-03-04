@@ -95,26 +95,7 @@
 [chara_hide name="tensi"]
 [mask_rule graphic="rouka.jpg" rule="032.png" folder="bgimage" time="1500"]
 [bg storage="rouka.jpg" time=0]
-[transparent_frame]
-[mask_off_rule rule="032.png" time=1]
-[wait time="300"]
-[fadein_frame time="400"]
-[chara_show name="tensi" top=50]
-
-[chara_mod name="tensi" face="normal"]
-# ???
-「…教室だね」[p]
-
-[chara_mod name="tensi" face="smile"]
-# ???
-「戻るね」[p]
-
-;元の背景（教会）へ戻る
-[iscript]
-TYRANO.kag.layer.getLayer("message0","fore").animate({opacity:0},400);
-[endscript]
-[chara_hide name="tensi"]
-[wait time="450"]
+[transparent_frame]0"]
 [layopt layer="message0" visible="false"]
 [iscript]
 TYRANO.kag.layer.getLayer("message0","fore").css("opacity","");
