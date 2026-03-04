@@ -136,11 +136,13 @@ TYRANO.kag.layer.getLayer("message0","fore").css("opacity","");
 ;--- スチル演出（メモロビ風）---
 [stop_keyconfig]
 [cancelskip]
+;UIとキャラをフェードアウト（fixlayerはpointer-events維持でSAVE等操作を可能にする）
+;（[fadeout_frame]はスキップ再開時にアニメスタックが壊れ後続の[mask_off]が永久待機するためjQuery直接操作に変更）
 [iscript]
-$('.fixlayer').css('pointer-events','none');
+$(".message0_fore").children().stop(true,true).animate({opacity:0}, 2000);
+$(".fixlayer").stop(true,true).animate({opacity:0}, 2000);
 [endscript]
-;UIとキャラをフェードアウト
-[fadeout_frame time="2000"]
+[wait time="2000"]
 [chara_hide name="tensi"]
 
 ;白暗転（[mask]使用・[start_keyconfig]なし・[stop_keyconfig]維持）
@@ -168,7 +170,11 @@ $l.css({
 
 ;白暗転解除
 [cancelskip]
-[mask_off time="1000"]
+[iscript]
+$("#root_layer_game").css("opacity", 1);
+$(".layer_mask").css("animation", "none").animate({opacity:0}, 1000, function(){ $(this).remove(); });
+[endscript]
+[wait time="1000"]
 
 ;全体画像フェードイン（カメラパン中に重ねる）
 [cancelskip]
@@ -195,15 +201,17 @@ $l.animate({opacity:1}, 9000);
 [iscript]
 var $l = TYRANO.kag.layer.getLayer("1","fore");
 $l.stop();
-$l.css({"background-image":"","background-size":"","background-position":"","opacity":""});
+$l.css({"background-image":"none","background-size":"","background-position":"","opacity":"0"});
 $(".message0_fore").children().stop(true, true).css("opacity", 0);
 $(".fixlayer").stop(true, true).css("opacity", 0);
 [endscript]
 [reset_camera layer="base" time="1"]
 [bg storage="church.jpg" time=0]
+[layopt layer="1" visible="false"]
 [cm]
 ;暗転解除（教会フェードイン）
 [mask_off time="1000"]
+[bg storage="church.jpg" time=0]
 [wait time="300"]
 ;ウィンドウ・ボタンをフェードイン
 [iscript]
@@ -217,9 +225,6 @@ $(".fixlayer").stop(true, true).animate({opacity: 1}, 1000);
 [chara_mod name="tensi" face="normal"]
 # ???
 「次は、選択肢と分岐だ」[p]
-[iscript]
-$('.fixlayer').css('pointer-events','');
-[endscript]
 
 ;選択肢
 [glink color="tswitch" text="選択肢A" target="*select_a" size="20" width="400" x="400" y="300"]

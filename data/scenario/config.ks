@@ -226,6 +226,11 @@ $('#title_ui').css('opacity', '0');
 	[endscript]
 
 	[layopt layer="message1" visible="false"]
+	[free layer="0" name="bgmvol" time="0" wait="true"]
+	[free layer="0" name="sevol"  time="0" wait="true"]
+	[free layer="0" name="ch"     time="0" wait="true"]
+	[free layer="0" name="auto"   time="0" wait="true"]
+	[free layer="0" name="skip"   time="0" wait="true"]
 	[clearfix]
 	[start_keyconfig]
 	[clearstack]
