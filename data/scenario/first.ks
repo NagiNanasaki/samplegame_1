@@ -31,6 +31,8 @@ $(".layer_menu").hide();
 
 ;マスクプラグイン読み込み
 [plugin name=mask_rule]
+[plugin name=bg_rule]
+
 
 ;オープニングスプラッシュ表示
 [show_opening logo=logo.png warning=warning.png]

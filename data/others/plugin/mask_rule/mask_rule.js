@@ -168,6 +168,7 @@ Licensed under the MIT license - http://opensource.org/licenses/MIT
   var isReverse = false;
   var isMaskOn = false;
   var maskLayer;
+  var lastMaskImageSrc = null;
   var enableShortCut = (TYRANO.kag.stat.mp.shortcut !== 'false');
   
   
@@ -280,11 +281,18 @@ Licensed under the MIT license - http://opensource.org/licenses/MIT
 
 
   function getPrevImageSrc() {
+    // 前の[mask_rule]完了時に保存した画像URLを優先（2回目以降の[mask_rule]用）
+    if (lastMaskImageSrc) {
+      return lastMaskImageSrc;
+    }
     var $canvas = $('#canvas_mask_rule');
-    if ($canvas.length > 0 && mainCanvas.getAttribute('data-image')) {
+    if ($canvas.length > 0 && mainCanvas && mainCanvas.getAttribute('data-image')) {
       return mainCanvas.getAttribute('data-image');
     }
     var base = maskLayer;
+    if (!base || !document.body.contains(base)) {
+      return 'color:transparent';
+    }
     var url = base.style.backgroundImage;
     var ret;
     if (url !== 'none' && url !== '') {
@@ -412,18 +420,19 @@ Licensed under the MIT license - http://opensource.org/licenses/MIT
   function finishTransition() {
     isTrans = false;
     cancelAnimationFrame(renderTimerId);
-    clearLayer(maskLayer);
-    
-    TYRANO.kag.layer.showEventLayer();
-        
-    /*
-    mainCanvas.ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    */
-    if (!isMaskOn) {
-      $(maskLayer).remove();
+    // [mask_rule]完了時に次の[mask_rule]のためprevImageSrcを保存
+    if (isMaskOn && mainCanvas) {
+      lastMaskImageSrc = mainCanvas.getAttribute('data-image');
     }
+    clearLayer(maskLayer);
+    TYRANO.kag.layer.showEventLayer();
+    // isMaskOn=trueでも常にlayer_maskを削除する
+    $(maskLayer).remove();
     if (isWait) {
-      TYRANO.kag.ftag.nextOrder();
+      // setTimeout(0)でイベントループを挟み競合を回避
+      setTimeout(function() {
+        TYRANO.kag.ftag.nextOrder();
+      }, 0);
     }
   }
 
