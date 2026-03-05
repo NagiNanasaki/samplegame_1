@@ -219,7 +219,12 @@ $(".fixlayer").stop(true,true).animate({opacity:0}, 2000);
 
 ; 白暗転（スチル表示切り替えのためのフラッシュ）
 [cancelskip]
-[mask_off time=1]
+; NOTE: [mask_off time=1] はブラウザでanimationendが発火しないことがあり
+;       ゲームが止まるバグの原因になる → iscriptで直接削除する
+[iscript]
+$('.layer_mask').remove();
+$('#root_layer_game').css('opacity', 1);
+[endscript]
 [mask time="1000" color="0xffffff"]
 
 ; スチル画像を layer=1 にセット（まだ非表示状態）

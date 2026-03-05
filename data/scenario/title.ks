@@ -48,19 +48,22 @@ try {
 // 既存の白オーバーレイを削除してから新規作成（二重作成を防ぐ）
 $('#title_fade_overlay').remove();
 $('.tyrano_base').append('<div id="title_fade_overlay" style="position:absolute;top:0;left:0;width:1280px;height:720px;background:#fff;z-index:99999;pointer-events:none;"></div>');
+// フォールバック：3秒後に強制フェードアウト（anime()が失敗した場合の保険）
+setTimeout(function() {
+  var el = document.getElementById('title_fade_overlay');
+  if (el) { $(el).animate({opacity:0}, 500, function(){ $(this).remove(); }); }
+}, 3000);
 [endscript]
 
 ; マスク（黒暗転）を即座に解除
-@mask_off time="0"
+; NOTE: @mask_off time="0" はブラウザでanimationendが発火しないことがあり
+;       ゲームが止まるバグの原因になる → iscriptで直接削除する
+[iscript]
+$('.layer_mask').remove();
+$('#root_layer_game').css('opacity', 1);
+[endscript]
 
 *start
-
-; BGMを再生（Config/Extraから戻った場合はスキップ）
-; tf._title_skip_anim は Config/Extra への jump 前に true にセットされ、
-; 戻った後の iscript で false にリセットされる
-[if exp="!tf._title_skip_anim"]
-[playbgm storage="op.mp3"]
-[endif]
 
 ;-------------------------------------------
 ; タイトル画面 UI の構築（anime.js を使ったアニメーション付き）
@@ -79,6 +82,21 @@ $('.tyrano_base').append('<div id="title_fade_overlay" style="position:absolute;
 ; アニメーションをスキップして即座に最終状態に設定する。
 ;-------------------------------------------
 [iscript]
+// BGM waitClick状態をクリーンアップするヘルパー（グローバルに定義してスコープ問題を回避）
+// ブラウザのautoplay制限でplaybgmがwaitClick状態になった場合、ボタンクリック時に呼ぶ
+// BGMアンロックヘルパー（windowに直接代入してevalスコープ問題を回避）
+// 呼び出しは必ず window.tyBgmUnlock() と明示的に参照する
+window.tyBgmUnlock = function() {
+  var wasLocked = !(TYRANO.kag.tmp && TYRANO.kag.tmp.ready_audio);
+  if (TYRANO.kag.readyAudio) TYRANO.kag.readyAudio();
+  if (TYRANO.kag.cancelWeakStop) TYRANO.kag.cancelWeakStop();
+  $(".tyrano_base").off("click.bgm");
+  // audio未解放状態だった場合のみBGMを手動で開始（playbgmのwaitClickを代替）
+  if (wasLocked && !window.tyBgmSkipped) {
+    TYRANO.kag.ftag.startTag('playbgm', {storage:'op.mp3'});
+  }
+};
+
 // 既存の UI を削除してから再構築（[jump] ループでの二重作成を防ぐ）
 $('#title_ui').remove();
 
@@ -153,6 +171,8 @@ $('.tyrano_base').append(
 // tf._title_skip_anim は各ボタンの jump 前に true にセットされている
 var _skipAnim = !!(tf._title_skip_anim);
 tf._title_skip_anim = false; // フラグをリセット（次回通常遷移のため）
+tf._bgmSkip = _skipAnim;     // [if]ガード用。上でリセット済みのため別変数に保存
+window.tyBgmSkipped = _skipAnim; // tyBgmUnlock から参照するためグローバルに保存
 
 // 白オーバーレイをフェードアウト（背景のフェードイン演出）
 anime({
@@ -232,6 +252,7 @@ $('.title-btn').on('click', function() {
 //-------------------------------------------
 $('#tbtn_newgame').on('click', function(e) {
   e.stopPropagation(); // イベントバブリングを防止（誤動作防止）
+  window.tyBgmUnlock();
   // 黒オーバーレイを追加してフェードイン
   $('.tyrano_base').append('<div id="ng_black" style="position:absolute;top:0;left:0;width:1280px;height:720px;background:#000;z-index:99999;opacity:0;pointer-events:none;"></div>');
   anime({
@@ -256,6 +277,7 @@ $('#tbtn_newgame').on('click', function(e) {
 //-------------------------------------------
 $('#tbtn_continue').on('click', function(e) {
   e.stopPropagation();
+  window.tyBgmUnlock();
   $('.title-btn').css('pointer-events', 'none'); // 多重クリック防止
   // 薄いベージュのオーバーレイを表示して画面切り替えを隠す
   $('<div id="exit_overlay">').css({position:'absolute',top:0,left:0,width:'1280px',height:'720px',background:'#f5e8d5',zIndex:99999,opacity:0,pointerEvents:'none'}).appendTo('.tyrano_base');
@@ -293,6 +315,7 @@ $('#tbtn_continue').on('click', function(e) {
 //-------------------------------------------
 $('#tbtn_config').on('click', function(e) {
   e.stopPropagation();
+  window.tyBgmUnlock();
   $('.title-btn').css('pointer-events', 'none');
   $('<div id="exit_overlay">').css({position:'absolute',top:0,left:0,width:'1280px',height:'720px',background:'#f5e8d5',zIndex:99999,opacity:0,pointerEvents:'none'}).appendTo('.tyrano_base');
   anime({
@@ -314,6 +337,7 @@ $('#tbtn_config').on('click', function(e) {
 //-------------------------------------------
 $('#tbtn_extra').on('click', function(e) {
   e.stopPropagation();
+  window.tyBgmUnlock();
   $('.title-btn').css('pointer-events', 'none');
   $('<div id="exit_overlay">').css({position:'absolute',top:0,left:0,width:'1280px',height:'720px',background:'#f5e8d5',zIndex:99999,opacity:0,pointerEvents:'none'}).appendTo('.tyrano_base');
   anime({
@@ -334,10 +358,22 @@ $('#tbtn_extra').on('click', function(e) {
 //-------------------------------------------
 $('#tbtn_exit').on('click', function(e) {
   e.stopPropagation();
+  window.tyBgmUnlock();
   if (typeof nw !== 'undefined') { nw.App.quit(); } // NW.js (デスクトップアプリ)
   else { window.close(); }                           // ブラウザ
 });
+
+// ready_audioをtrueにして[playbgm]がwaitClick（シナリオ停止）しないようにする
+// Howler.jsがAudioContext未解放でも内部キューに積み、最初のユーザー操作で自動再生する
+if (TYRANO.kag.readyAudio) TYRANO.kag.readyAudio();
 [endscript]
+
+; BGMをUIの後に再生（Config/Extraから戻った場合はスキップ）
+; iscript実行後にplaybgmを置くことで、ブラウザのautoplay制限に対応：
+; ready_audioがfalseでもUIは既に構築済みのためボタンは正常に動作する
+[if exp="!tf._bgmSkip"]
+[playbgm storage="op.mp3"]
+[endif]
 
 [s]
 

@@ -8,6 +8,13 @@
         <meta name="robots" content="noindex,nofollow" />
 
         <style>.menu_icon_area { display: none !important; }</style>
+
+        <!-- 初回読み込み高速化：タイトル画面の主要アセットをページ解析と同時にダウンロード -->
+        <link rel="preload" as="image" href="./data/bgimage/title_menu.png">
+        <link rel="preload" as="image" href="./data/fgimage/chara/tensi/tensi_normal.png">
+        <link rel="preload" as="image" href="./data/image/title/title_logo.png">
+        <link rel="preload" as="audio" href="./data/bgm/op.mp3" crossorigin>
+
         <link href="./tyrano/tyrano.css" rel="stylesheet" />
         <link href="./tyrano/libs/jquery-ui/jquery-ui.css" rel="stylesheet" />
 
