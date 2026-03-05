@@ -211,7 +211,7 @@ $(".message0_fore").children().stop(true,true).animate({opacity:0}, 2000);
 $(".fixlayer").stop(true,true).animate({opacity:0}, 2000);
 [endscript]
 [wait time="2000"]
-[chara_hide name="tensi")]
+[chara_hide name="tensi"]
 
 ; カメラをズーム2倍・右下オフセット位置にセット（スチル演出の開始位置）
 ; zoom="2" : 拡大率2倍　y="-160" x="100" : 画面下方向・右にオフセット
