@@ -43,6 +43,7 @@ if (typeof f._prevBgmVol === "undefined") {
 }
 
 tf._cfgImg = "../others/plugin/thema_nagi_1/image/config/";
+tf.text_sample = 'テストメッセージです。このスピードでテキストが表示されます。';
 [endscript]
 
 [cm]
@@ -124,6 +125,42 @@ TYRANO.kag.ftag.startTag("button", {
 [call target="*draw_auto"]
 [call target="*draw_skip"]
 
+[iscript]
+if (window._sampleTimer) { clearInterval(window._sampleTimer); window._sampleTimer = null; }
+$('#cfg_sample_text').remove();
+$('.layer_free').show();
+$('.layer_free').append(
+  '<div id="cfg_sample_text" style="' +
+    'position:absolute;top:580px;left:130px;' +
+    'width:1000px;height:90px;' +
+    'color:#f2f2f2;font-size:21px;' +
+    'z-index:99999999;' +
+  '"></div>'
+);
+(function() {
+  var text = tf.text_sample;
+  function start() {
+    var $el = $('#cfg_sample_text');
+    if (!$el.length) return;
+    $el.text('');
+    var i = 0;
+    function update() {
+      var $el = $('#cfg_sample_text');
+      if (!$el.length) return;
+      if (i < text.length) {
+        $el.text($el.text() + text[i]);
+        i++;
+        window._sampleTimer = setTimeout(update, parseInt(TG.config.chSpeed));
+      } else {
+        window._sampleTimer = setTimeout(start, parseInt(TG.config.autoSpeed));
+      }
+    }
+    window._sampleTimer = setTimeout(update, 50);
+  }
+  start();
+})();
+[endscript]
+
 [s]
 
 ; ==============================================================
@@ -134,6 +171,10 @@ TYRANO.kag.ftag.startTag("button", {
 [layopt layer="message1" visible="false"]
 [clearfix]
 [start_keyconfig]
+[iscript]
+if (window._sampleTimer) { clearInterval(window._sampleTimer); window._sampleTimer = null; }
+$('#cfg_sample_text').remove();
+[endscript]
 [clearstack]
 [awakegame]
 
@@ -175,9 +216,46 @@ if (tf._seIdx !== 0) {
 
 ; ---- テキスト速度 ----
 *ch_speed_change
+[iscript]
+if (window._sampleTimer) { clearInterval(window._sampleTimer); window._sampleTimer = null; }
+$('#cfg_sample_text').remove();
+[endscript]
 [free layer="0" name="ch" time="0" wait="true"]
 [call target="*draw_ch"]
 [configdelay speed="&tf._chs[tf._chIdx]"]
+[iscript]
+$('.layer_free').show();
+$('.layer_free').append(
+  '<div id="cfg_sample_text" style="' +
+    'position:absolute;top:580px;left:130px;' +
+    'width:1000px;height:90px;' +
+    'color:#f2f2f2;font-size:21px;' +
+    'z-index:99999999;' +
+  '"></div>'
+);
+(function() {
+  var text = tf.text_sample;
+  function start() {
+    var $el = $('#cfg_sample_text');
+    if (!$el.length) return;
+    $el.text('');
+    var i = 0;
+    function update() {
+      var $el = $('#cfg_sample_text');
+      if (!$el.length) return;
+      if (i < text.length) {
+        $el.text($el.text() + text[i]);
+        i++;
+        window._sampleTimer = setTimeout(update, parseInt(TG.config.chSpeed));
+      } else {
+        window._sampleTimer = setTimeout(start, parseInt(TG.config.autoSpeed));
+      }
+    }
+    window._sampleTimer = setTimeout(update, 50);
+  }
+  start();
+})();
+[endscript]
 [return]
 
 ; ---- オート速度 ----

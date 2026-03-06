@@ -164,8 +164,11 @@ anime({
 });
 
 // 霞・キャラ・ロゴ・ボタンのフェードイン
-// _btnReady フラグ：ボタンが表示完了するまでクリック・ホバーSEを無効化するために使用
+// _btnReady フラグ：ホバーSEのタイミング制御のみに使用（ボタン操作は window._titleClickLock で制御）
 var _btnReady = false;
+// 連打防止フラグ（window に置くことで iscript スコープ外からもリセット可能）
+window._titleClickLock = false;
+
 if (_skipAnim) {
   // Config/Extra から戻った場合：アニメーションなしで即表示
   $('#title_haze').css('opacity', 1);
@@ -185,7 +188,7 @@ if (_skipAnim) {
     duration: 700,
     easing: 'easeOutCubic',
     delay: anime.stagger(120, {start: 4200}), // ボタンを順番にずらしてフェードイン
-    complete: function() { _btnReady = true; } // 全ボタン表示完了でホバーSEを有効化
+    complete: function() { _btnReady = true; } // ホバーSE有効化
   });
 }
 
@@ -217,12 +220,13 @@ $('.title-orb').each(function(i, orb) {
 // ホバーSE：ボタンにマウスが乗ったときに効果音を再生
 // _btnReady が true になるまで（ボタン表示完了前）は再生しない
 $('.title-btn').on('mouseenter', function() {
-  if (!_btnReady) return;
+  if (!_btnReady || window._titleClickLock) return;
   TYRANO.kag.ftag.startTag('playse', {storage:'piano_po-n.mp3'});
 });
 
-// クリックSE：どのボタンをクリックしても共通の効果音を再生
-$('.title-btn').on('click', function() {
+// クリックSE：どのボタンを押しても共通の効果音を再生
+$('.title-btn').on('mousedown', function() {
+  if (window._titleClickLock) return;
   TYRANO.kag.ftag.startTag('playse', {storage:'start.mp3'});
 });
 
@@ -230,8 +234,11 @@ $('.title-btn').on('click', function() {
 // NewGame ボタン
 // 黒フェードしてから scene0.ks にジャンプ
 //-------------------------------------------
-$('#tbtn_newgame').on('click', function(e) {
-  e.stopPropagation(); // イベントバブリングを防止（誤動作防止）
+$('#tbtn_newgame').on('mousedown', function(e) {
+
+  e.stopPropagation();
+  if (window._titleClickLock) return;
+  window._titleClickLock = true;
   // 黒オーバーレイを追加してフェードイン
   $('.tyrano_base').append('<div id="ng_black" style="position:absolute;top:0;left:0;width:1280px;height:720px;background:#000;z-index:99999;opacity:0;pointer-events:none;"></div>');
   anime({
@@ -254,9 +261,11 @@ $('#tbtn_newgame').on('click', function(e) {
 // フェードオーバーレイでちらつきを防ぎ、
 // ロード画面が閉じられたらボタンを再有効化する
 //-------------------------------------------
-$('#tbtn_continue').on('click', function(e) {
+$('#tbtn_continue').on('mousedown', function(e) {
+
   e.stopPropagation();
-  $('.title-btn').css('pointer-events', 'none'); // 多重クリック防止
+  if (window._titleClickLock) return;
+  window._titleClickLock = true;
   // 薄いベージュのオーバーレイを表示して画面切り替えを隠す
   $('<div id="exit_overlay">').css({position:'absolute',top:0,left:0,width:'1280px',height:'720px',background:'#f5e8d5',zIndex:99999,opacity:0,pointerEvents:'none'}).appendTo('.tyrano_base');
   anime({
@@ -277,9 +286,9 @@ $('#tbtn_continue').on('click', function(e) {
             anime({targets:'#exit_overlay', opacity:0, duration:200, easing:'easeOutQuad', complete:function(){ $('#exit_overlay').remove(); }});
           }
         } else if (!$menu.is(':visible')) {
-          // ロード画面が閉じられたらボタンを再有効化して監視を止める
+          // ロード画面が閉じられたらロックを解除して監視を止める
           clearInterval(check);
-          $('.title-btn').css('pointer-events', 'all');
+          window._titleClickLock = false;
         }
       }, 100);
     }
@@ -291,9 +300,11 @@ $('#tbtn_continue').on('click', function(e) {
 // config.ks にジャンプしてコンフィグ画面を表示
 // 戻り時のアニメーションスキップフラグを立ててから遷移
 //-------------------------------------------
-$('#tbtn_config').on('click', function(e) {
+$('#tbtn_config').on('mousedown', function(e) {
+
   e.stopPropagation();
-  $('.title-btn').css('pointer-events', 'none');
+  if (window._titleClickLock) return;
+  window._titleClickLock = true;
   $('<div id="exit_overlay">').css({position:'absolute',top:0,left:0,width:'1280px',height:'720px',background:'#f5e8d5',zIndex:99999,opacity:0,pointerEvents:'none'}).appendTo('.tyrano_base');
   anime({
     targets: '#exit_overlay',
@@ -312,9 +323,11 @@ $('#tbtn_config').on('click', function(e) {
 // Extra ボタン
 // cg.ks にジャンプして CG モード画面を表示
 //-------------------------------------------
-$('#tbtn_extra').on('click', function(e) {
+$('#tbtn_extra').on('mousedown', function(e) {
+
   e.stopPropagation();
-  $('.title-btn').css('pointer-events', 'none');
+  if (window._titleClickLock) return;
+  window._titleClickLock = true;
   $('<div id="exit_overlay">').css({position:'absolute',top:0,left:0,width:'1280px',height:'720px',background:'#f5e8d5',zIndex:99999,opacity:0,pointerEvents:'none'}).appendTo('.tyrano_base');
   anime({
     targets: '#exit_overlay',
@@ -332,8 +345,10 @@ $('#tbtn_extra').on('click', function(e) {
 // Exit ボタン
 // NW.js 環境ならアプリ終了、ブラウザならウィンドウを閉じる
 //-------------------------------------------
-$('#tbtn_exit').on('click', function(e) {
+$('#tbtn_exit').on('mousedown', function(e) {
+
   e.stopPropagation();
+  if (window._titleClickLock) return;
   if (typeof nw !== 'undefined') { nw.App.quit(); } // NW.js (デスクトップアプリ)
   else { window.close(); }                           // ブラウザ
 });

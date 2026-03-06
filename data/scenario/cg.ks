@@ -28,7 +28,7 @@ tf.cg_index          = 0;
 ;-----------------------------------------------------------
 [cm]
 
-[button graphic="append_theme/gallery_close.png" enterimg="append_theme/gallery_close2.png" target=*backtitle x=1170 y=20]
+[button fix="true" graphic="append_theme/gallery_close.png" enterimg="append_theme/gallery_close2.png" target=*backtitle x=1170 y=20]
 
 [jump target="& 'page_' + tf.page "]
 
@@ -63,9 +63,9 @@ tf.cg_index          = 0;
 *backtitle
 ;-----------------------------------------------------------
 [cm]
+[clearfix]
 [freeimage layer=0]
 [freeimage layer=1]
-
 [clearstack]
 [jump storage="title.ks"]
 
@@ -84,7 +84,7 @@ tf.cg_index          = 0;
 ;-----------------------------------------------------------
 *no_image
 ;-----------------------------------------------------------
-[jump target=*cgpage]
+[jump target=*common]
 
 ;-----------------------------------------------------------
 *clickcg

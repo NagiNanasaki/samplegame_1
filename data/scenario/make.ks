@@ -94,6 +94,23 @@ $('#title_ui').remove();
 $('#title_fade_overlay').remove();
 $('#ng_black').remove();
 $('#exit_overlay').remove();
+
+// [AUTO] インジケーター（ロード後も確実に表示されるよう再生成）
+$('#auto_indicator').remove();
+$('<div id="auto_indicator">').css({
+  position: 'absolute', top: '535px', left: '1080px',
+  color: 'rgba(242,242,242,0.85)', fontSize: '13px',
+  fontFamily: 'sans-serif', fontWeight: 'bold', letterSpacing: '2px',
+  zIndex: 99999999, display: 'none', pointerEvents: 'none',
+  textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+}).text('[AUTO]').appendTo('.tyrano_base');
+if (!window._autoIndicatorTimer) {
+  window._autoIndicatorTimer = setInterval(function() {
+    var stat = TYRANO.kag.stat;
+    var isAuto = stat && stat.is_auto;
+    $('#auto_indicator').css('display', isAuto ? 'block' : 'none');
+  }, 150);
+}
 [endscript]
 
 ; make.ks は [call] で呼ばれるため [return] で呼び出し元に戻る
