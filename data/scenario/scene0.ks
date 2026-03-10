@@ -12,6 +12,8 @@
 [clearfix]
 ; システムメニューボタンを非表示
 [hidemenubutton]
+; タイトルからのskip状態持ち越しを解除
+[cancelskip]
 ; キーボード操作を有効化
 [start_keyconfig]
 

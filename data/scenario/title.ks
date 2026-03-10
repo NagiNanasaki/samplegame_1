@@ -4,6 +4,10 @@
 ; 呼び出し履歴をリセット（[jump] で戻ってきた時にスタックが積まれないようにする）
 @clearstack
 
+; タイトル表示中はskip状態を解除し、キー入力での再スキップを抑止
+[cancelskip]
+[stop_keyconfig]
+
 ; カメラをリセット（スチル演出などでカメラが動いた場合に備えて初期状態に戻す）
 ; NOTE: layer="base" が有効なレイヤー指定か不明だが現状動作している。将来的に確認推奨
 [reset_camera layer="base" time="1"]

@@ -6,6 +6,9 @@
 ;   bg や position の設定をしてから mask_off で明ける
 ;-------------------------------------------
 
+; 前周のスキップ状態を持ち越さない
+[cancelskip]
+
 ; 暗転中に背景を設定（time=100 で即座に切り替え）
 [bg storage="church.jpg" time=100]
 
@@ -133,6 +136,10 @@
 ;   5. UIとキャラをフェードイン
 ;-------------------------------------------
 
+; シーンチェンジ中はスキップ入力を封鎖（連打時の硬直対策）
+[stop_keyconfig]
+[cancelskip]
+
 ; UIとキャラをフェードアウト
 ; fixlayer は pointer-events を維持（SAVE等のシステム操作を可能にするため）
 [iscript]
@@ -156,6 +163,7 @@ $(".fixlayer").stop(true, true).animate({opacity: 1}, 1000);
 [endscript]
 [wait time="1000"]
 [chara_show name="tensi" top=50 time=400]
+[start_keyconfig]
 
 # ???
 「廊下だね」[p]
@@ -165,6 +173,10 @@ $(".fixlayer").stop(true, true).animate({opacity: 1}, 1000);
 ; シーンチェンジ演出（廊下 → 教会）
 ; 上と同じ手順で教会に戻る
 ;-------------------------------------------
+
+; シーンチェンジ中はスキップ入力を封鎖（連打時の硬直対策）
+[stop_keyconfig]
+[cancelskip]
 
 [iscript]
 $(".message0_fore").children().stop(true,true).animate({opacity:0}, 2000);
@@ -183,6 +195,7 @@ $(".fixlayer").stop(true, true).animate({opacity: 1}, 1000);
 [endscript]
 [wait time="1000"]
 [chara_show name="tensi" top=50 time=400]
+[start_keyconfig]
 
 # ???
 「こんなふうに、場面を切り替えることができるよ」[p]
@@ -424,6 +437,9 @@ var _check = setInterval(function() {
 ; fixlayer に残っているシステムボタン（role_button）を消去
 ; ※[mask] 黒画面中でも fixlayer は生きているため、jump 前に明示的にクリアする
 [clearfix name="role_button"]
+
+; タイトルへ戻る前にスキップ状態を解除
+[cancelskip]
 
 ; タイトルに戻る
 @jump storage=title.ks
