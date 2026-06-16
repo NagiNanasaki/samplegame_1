@@ -1,5 +1,5 @@
-# Perseid_game
-Perseid開発用リポジトリ
+# Sample_game
+SampleGame開発用リポジトリ
 
 ## administer 
 七咲凪　
@@ -8,6 +8,6 @@ Perseid開発用リポジトリ
 ている×ている
 
 ## discripition
-サークルている×ている　開発作品【Perseid】の開発用リポジトリです。
+サークルている×ている　開発作品【Sample】の開発用リポジトリです。
 
 ## structure
