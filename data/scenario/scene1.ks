@@ -235,8 +235,10 @@ $(".fixlayer").stop(true,true).animate({opacity:0}, 2000);
 [mask_off time=1]
 [mask time="1000" color="0xffffff"]
 
-; スチル画像を layer=1 にセット（まだ非表示状態）
-[image layer="1" storage="star.webp" left="0" top="0"]
+; Web配信では画像ロード・描画が1フレーム遅れることがあるため、
+; 白暗転を明ける前に star.webp を確実に読み込み、短いフェードで描画を確定させる
+[preload storage="./data/fgimage/star.webp" wait="true"]
+[image layer="1" storage="star.webp" left="0" top="0" time="60"]
 
 ; カメラパン開始：ズーム2倍のまま右下→中央に9秒かけて移動
 ; wait="false" でブロッキングなし（次の処理に即移行）

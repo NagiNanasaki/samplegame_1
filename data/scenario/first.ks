@@ -62,6 +62,11 @@ $('.tyrano_base').append(
   '</div>'
 );
 $('#_sound_notice').on('click', function() {
+  try {
+    if (TYRANO.kag && !TYRANO.kag.tmp.ready_audio) {
+      TYRANO.kag.readyAudio();
+    }
+  } catch(e) { console.error("[sound notice readyAudio]", e); }
   $(this).animate({opacity: 0}, 350, function() {
     $(this).remove();
     TYRANO.kag.ftag.startTag('jump', {storage:'first.ks', target:'*_show_opening'});

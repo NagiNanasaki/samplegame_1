@@ -55,7 +55,13 @@ $('.tyrano_base').append('<div id="title_fade_overlay" style="position:absolute;
 [endscript]
 
 ; マスク（黒暗転）を即座に解除
-@mask_off time="0"
+; Web配信では time=0 の [mask_off] がアニメーション完了待ちで止まることがあるため、
+; タイトルの白オーバーレイで隠したまま DOM を直接掃除する
+[iscript]
+$("#root_layer_game").css("opacity", 1);
+$(".layer_mask").stop(true, true).remove();
+TYRANO.kag.cancelWeakStop();
+[endscript]
 
 *start
 
@@ -63,7 +69,21 @@ $('.tyrano_base').append('<div id="title_fade_overlay" style="position:absolute;
 ; tf._title_skip_anim は Config/Extra への jump 前に true にセットされ、
 ; 戻った後の iscript で false にリセットされる
 [if exp="!tf._title_skip_anim"]
-[playbgm storage="op.mp3"]
+[iscript]
+try {
+  var playTitleBgm = function() {
+    TYRANO.kag.ftag.startTag('playbgm', {storage:'op.mp3', loop:'true', stop:'true'});
+  };
+  if (TYRANO.kag.tmp.ready_audio) {
+    setTimeout(playTitleBgm, 0);
+  } else {
+    $('.tyrano_base').one('click.title_bgm', function() {
+      TYRANO.kag.readyAudio();
+      setTimeout(playTitleBgm, 0);
+    });
+  }
+} catch(e) { console.error("[title bgm]", e); }
+[endscript]
 [endif]
 
 ;-------------------------------------------
