@@ -61,16 +61,42 @@ $('.tyrano_base').append(
   '</div>' +
   '</div>'
 );
+var _soundNoticeStarted = false;
 $('#_sound_notice').on('click', function() {
+  if (_soundNoticeStarted) return;
+  _soundNoticeStarted = true;
+  var $notice = $(this);
   try {
     if (TYRANO.kag && !TYRANO.kag.tmp.ready_audio) {
       TYRANO.kag.readyAudio();
     }
   } catch(e) { console.error("[sound notice readyAudio]", e); }
-  $(this).animate({opacity: 0}, 350, function() {
-    $(this).remove();
-    TYRANO.kag.ftag.startTag('jump', {storage:'first.ks', target:'*_show_opening'});
-  });
+
+  $notice.find('p').eq(2).text('L O A D I N G').css('letter-spacing', '0.32em');
+  $notice.find('div').first().append(
+    '<p id="_sound_notice_progress" style="font-size:11px;color:#a07840;letter-spacing:0.12em;margin:18px 0 0;">0%</p>'
+  );
+
+  var startOpening = function() {
+    $notice.animate({opacity: 0}, 350, function() {
+      $(this).remove();
+      TYRANO.kag.ftag.startTag('jump', {storage:'first.ks', target:'*_show_opening'});
+    });
+  };
+
+  if (window.NAGI_WEB_PRELOAD && window.NAGI_WEB_PRELOAD.shouldRun()) {
+    window.NAGI_WEB_PRELOAD.prepare({
+      onProgress: function(done, total) {
+        var percent = total > 0 ? Math.floor(done / total * 100) : 100;
+        $('#_sound_notice_progress').text(percent + '%');
+      }
+    }).then(startOpening).catch(function(e) {
+      console.error("[web preload]", e);
+      startOpening();
+    });
+  } else {
+    startOpening();
+  }
 });
 [endscript]
 [s]
