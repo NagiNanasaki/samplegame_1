@@ -37,8 +37,8 @@ tf.cg_index          = 0;
 ;-------------------------------------------------------
 
 ; 一段目
-[cg_image_button graphic="rouka.jpg,room.jpg,title.png" no_graphic="../image/append_theme/lock.png" x=240 y=184 width=252 height=142 folder=bgimage]
-[cg_image_button graphic="room.jpg" no_graphic="../image/append_theme/lock.png" x=512 y=184 width=252 height=142 folder=bgimage]
+[cg_image_button graphic="rouka.webp,room.webp,title.png" no_graphic="../image/append_theme/lock.png" x=240 y=184 width=252 height=142 folder=bgimage]
+[cg_image_button graphic="room.webp" no_graphic="../image/append_theme/lock.png" x=512 y=184 width=252 height=142 folder=bgimage]
 [cg_image_button graphic="" no_graphic="../image/append_theme/lock.png" x=784 y=184 width=252 height=142]
 
 ; 二段目

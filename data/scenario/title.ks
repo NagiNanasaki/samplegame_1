@@ -13,7 +13,7 @@
 [reset_camera layer="base" time="1"]
 
 ; タイトル背景画像を即座に設定（time=0 でフェードなし）
-@bg storage="title_menu.png" time=0
+@bg storage="title_menu.webp" time=0
 
 ;-------------------------------------------
 ; chara_ptext フックの設定
@@ -84,6 +84,7 @@ $('.tyrano_base').append('<div id="title_fade_overlay" style="position:absolute;
 ;-------------------------------------------
 [iscript]
 // 既存の UI を削除してから再構築（[jump] ループでの二重作成を防ぐ）
+$('#title-orb-kf').remove();
 $('#title_ui').remove();
 
 // タイトル UI 全体を .tyrano_base に追加
@@ -91,14 +92,14 @@ $('.tyrano_base').append(
   '<div id="title_ui" style="position:absolute;top:0;left:0;width:1280px;height:720px;pointer-events:none;z-index:10000;">' +
   '<style>' +
   // 背景のズームアニメーション用レイヤー（画像を115%に拡大して中心を見せる）
-  '#title_bg_zoom{position:absolute;top:-7.5%;left:-7.5%;width:115%;height:115%;background:url(./data/bgimage/title_menu.png) center/cover no-repeat;pointer-events:none;}' +
+  '#title_bg_zoom{position:absolute;top:-7.5%;left:-7.5%;width:115%;height:115%;background:url(./data/bgimage/title_menu.webp) center/cover no-repeat;pointer-events:none;}' +
   // 光の玉の共通スタイル（円形・放射状グラデーション・ぼかし）
   '.title-orb{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,245,210,0.95) 0%,rgba(255,220,160,0.4) 45%,transparent 70%);pointer-events:none;opacity:0;filter:blur(5px);}' +
   // キャラクター立ち絵（中央下から表示）
   '#title_chara{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);height:580px;width:fit-content;pointer-events:none;opacity:0;}' +
   '#title_chara img{height:100%;width:auto;display:block;filter:drop-shadow(0 0 6px rgba(255,230,180,0.65)) drop-shadow(0 0 20px rgba(255,200,130,0.3));}' +
   // キャラクターの光エフェクト（screen ブレンドで金色に光らせる）
-  '#title_chara_light{position:absolute;inset:0;background:linear-gradient(to left,rgba(255,210,130,0.7) 0%,rgba(255,190,100,0.35) 30%,rgba(255,170,80,0.08) 60%,transparent 80%);mix-blend-mode:screen;-webkit-mask-image:url(./data/fgimage/chara/tensi/tensi_normal.png);-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat;pointer-events:none;}' +
+  '#title_chara_light{position:absolute;inset:0;background:linear-gradient(to left,rgba(255,210,130,0.7) 0%,rgba(255,190,100,0.35) 30%,rgba(255,170,80,0.08) 60%,transparent 80%);mix-blend-mode:screen;-webkit-mask-image:url(./data/fgimage/chara/tensi/tensi_normal.webp);-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat;pointer-events:none;}' +
   // 画面下部の霞エフェクト（白→透明のグラデーション）
   '#title_haze{position:absolute;bottom:0;left:0;width:100%;height:420px;background:linear-gradient(to top,rgba(255,255,255,1) 0%,rgba(255,255,255,0.92) 12%,rgba(255,255,255,0.7) 30%,rgba(255,255,255,0.35) 55%,rgba(255,255,255,0.08) 80%,transparent 100%);pointer-events:none;opacity:0;}' +
   // タイトルロゴ（左上エリアに配置）
@@ -118,7 +119,7 @@ $('.tyrano_base').append(
   '</style>' +
   '<div id="title_bg_zoom"></div>' +
   // キャラクター画像と光エフェクト
-  '<div id="title_chara"><img src="./data/fgimage/chara/tensi/tensi_normal.png"><div id="title_chara_light"></div></div>' +
+  '<div id="title_chara"><img src="./data/fgimage/chara/tensi/tensi_normal.webp"><div id="title_chara_light"></div></div>' +
   // 霞エフェクト
   '<div id="title_haze"></div>' +
   // 光の玉（各自 style で位置・サイズを個別指定）
@@ -142,7 +143,7 @@ $('.tyrano_base').append(
   '<div class="title-orb" style="width:22px;height:22px;top:600px;left:380px;"></div>' +
   '<div class="title-orb" style="width:14px;height:14px;top:560px;left:1150px;"></div>' +
   // ロゴ画像
-  '<div id="title_logo"><img src="./data/image/title/title_logo.png"></div>' +
+  '<div id="title_logo"><img src="./data/image/title/title_logo.webp"></div>' +
   // ボタン群
   '<div id="title_buttons">' +
   '<div class="title-btn" id="tbtn_newgame"><div class="title-btn-en">New Game</div><div class="title-btn-ja">はじめから</div></div>' +
@@ -152,6 +153,19 @@ $('.tyrano_base').append(
   '<div class="title-btn" id="tbtn_exit"><div class="title-btn-en">Exit</div><div class="title-btn-ja">ゲーム終了</div></div>' +
   '</div></div>'
 );
+
+// orb 浮遊ループ用 CSS @keyframes を生成して <head> に注入（GPU アニメーション）
+(function() {
+  var kf = '';
+  for (var n = 0; n < 19; n++) {
+    var tx = (n%2===0?1:-1)*(35+n*6), ty = -(45+n*10);
+    kf += '@keyframes of'+n+'{0%{transform:translate(0,0)}to{transform:translate('+tx+'px,'+ty+'px)}}';
+  }
+  var s = document.createElement('style');
+  s.id = 'title-orb-kf';
+  s.textContent = kf;
+  document.head.appendChild(s);
+})();
 
 // Config/Extra から戻った場合はアニメーションをスキップするフラグを読み取る
 // tf._title_skip_anim は各ボタンの jump 前に true にセットされている
@@ -208,17 +222,9 @@ $('.title-orb').each(function(i, orb) {
     // 通常時：フェードインしてから浮遊
     anime({ targets: orb, opacity: [0, orbOpacity[i]], duration: 1800, easing: 'easeOutQuad', delay: 3900 + i * 250 });
   }
-  // 上下・左右に揺れるループアニメーション（alternate で往復）
-  anime({
-    targets: orb,
-    translateY: -(45 + i * 10),         // 上方向に移動する量（玉ごとに異なる）
-    translateX: orbDirX[i] * (35 + i * 6), // 左右方向に移動する量
-    duration: 3000 + i * 400,            // 浮遊スピード（玉ごとに異なる）
-    easing: 'easeInOutSine',
-    direction: 'alternate',              // 往復アニメーション
-    loop: true,
-    delay: _skipAnim ? 0 : (3900 + i * 250)
-  });
+  // CSS @keyframes でGPUアニメーション（JS タイマーなし、合成スレッドで処理）
+  var _ld = _skipAnim ? 0 : (3900 + i * 250);
+  orb.style.animation = 'of'+i+' '+((3+i*0.4).toFixed(1))+'s ease-in-out '+_ld+'ms infinite alternate';
 });
 
 // ホバーSE：ボタンにマウスが乗ったときに効果音を再生

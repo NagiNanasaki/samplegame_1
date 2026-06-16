@@ -10,7 +10,7 @@
 [cancelskip]
 
 ; 暗転中に背景を設定（time=100 で即座に切り替え）
-[bg storage="church.jpg" time=100]
+[bg storage="church.webp" time=100]
 
 ; 暗転解除（3秒かけてフェードイン）
 [mask_off time=3000]
@@ -105,7 +105,7 @@
 ; 怒り表情 + 怒りアイコン画像をlayer=2に表示
 ; name="ikari" をつけることで [free] で個別に消去できる
 [chara_mod name="tensi" face="angry"]
-[image layer=2 page=fore storage="ikari_icon.png" folder=image name="ikari" x=655 y=120 width=90 height=90]
+[image layer=2 page=fore storage="ikari_icon.webp" folder=image name="ikari" x=655 y=120 width=90 height=90]
 [kanim name="tensi" keyframe="pyoko_s" time="300" count="1"]
 [playse storage="ikari.mp3" ]
 # ???
@@ -152,7 +152,7 @@ $(".fixlayer").stop(true,true).animate({opacity:0}, 2000);
 
 ; ルール画像（001.png）を使って廊下画像にトランジション
 ; bg_rule プラグインが背景の切り替えとアニメーションを処理する
-[bg_rule storage="rouka.jpg" rule="001.png"]
+[bg_rule storage="rouka.webp" rule="001.png"]
 
 ; メッセージウィンドウを戻す
 [layopt layer="message0" visible="true"]
@@ -186,7 +186,7 @@ $(".fixlayer").stop(true,true).animate({opacity:0}, 2000);
 [chara_hide name="tensi" time="300"]
 [layopt layer="message0" visible="false"]
 
-[bg_rule storage="church.jpg" rule="001.png"]
+[bg_rule storage="church.webp" rule="001.png"]
 
 [layopt layer="message0" visible="true"]
 [iscript]
@@ -236,7 +236,7 @@ $(".fixlayer").stop(true,true).animate({opacity:0}, 2000);
 [mask time="1000" color="0xffffff"]
 
 ; スチル画像を layer=1 にセット（まだ非表示状態）
-[image layer="1" storage="star.png" left="0" top="0"]
+[image layer="1" storage="star.webp" left="0" top="0"]
 
 ; カメラパン開始：ズーム2倍のまま右下→中央に9秒かけて移動
 ; wait="false" でブロッキングなし（次の処理に即移行）
@@ -256,7 +256,7 @@ $(".layer_mask").css("animation", "none").animate({opacity:0}, 1000, function(){
 ; layer=2 に全体スチル画像を time="9000" で徐々にフェードイン
 ; wait="false" でブロッキングなし（後続の [wait] で別途待機する）
 [cancelskip]
-[image layer="2" time="9000" wait="false" storage="star.png"]
+[image layer="2" time="9000" wait="false" storage="star.webp"]
 [wait time="5000"]
 
 ; スチルを見せた後にメッセージウィンドウを表示してセリフへ
@@ -283,14 +283,14 @@ $(".layer_mask").css("animation", "none").animate({opacity:0}, 1000, function(){
 [freeimage layer="1"]
 [freeimage layer="2"]
 [reset_camera layer="1" time="1"]
-[bg storage="church.jpg" time=0]
+[bg storage="church.webp" time=0]
 [layopt layer="1" visible="false"]
 [layopt layer="2" visible="false"]
 [cm]
 
 ; 黒暗転を解除して教会背景をフェードイン
 [mask_off time="1000"]
-[bg storage="church.jpg" time=0]
+[bg storage="church.webp" time=0]
 [wait time="300"]
 
 ; UIとキャラをフェードイン
@@ -354,21 +354,27 @@ $(".fixlayer").stop(true, true).animate({opacity: 1}, 1000);
 
 ; [movie] タグで動画再生する前に、出現するDOM要素（bgmovie）を監視して
 ; サイズ・位置・再生開始時刻を設定する
-; setInterval で bgmovie 要素が出現するまでポーリングし、見つかったら設定してクリア
+; MutationObserver で bgmovie 要素の出現を検知（setInterval より低負荷）
 [iscript]
-var _check = setInterval(function() {
-    var v = document.getElementById("bgmovie");
-    if (v) {
-        clearInterval(_check);
-        // 動画を画面中央に640x360でリサイズして表示
+(function() {
+    function _initVideo(v) {
         v.style.width  = "640px";
         v.style.height = "360px";
         v.style.left   = "320px";
         v.style.top    = "180px";
-        // 冒頭3.5秒（ブランドロゴ部分）をスキップして再生開始
         v.currentTime  = 3.5;
     }
-}, 10);
+    var v = document.getElementById("bgmovie");
+    if (v) {
+        _initVideo(v);
+    } else {
+        var _obs = new MutationObserver(function(_, obs) {
+            var v = document.getElementById("bgmovie");
+            if (v) { obs.disconnect(); _initVideo(v); }
+        });
+        _obs.observe(document.body, {childList: true, subtree: true});
+    }
+})();
 [endscript]
 [movie storage="gameplay_demo.mp4"]
 # ???
