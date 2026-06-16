@@ -355,16 +355,40 @@ $(".fixlayer").stop(true, true).animate({opacity: 1}, 1000);
 「もう一度見てみようか」[p]
 
 ; [movie] タグで動画再生する前に、出現するDOM要素（bgmovie）を監視して
-; サイズ・位置・再生開始時刻を設定する
+; サイズ・位置を設定する
 ; MutationObserver で bgmovie 要素の出現を検知（setInterval より低負荷）
 [iscript]
 (function() {
+    var VIDEO_W = 640;
+    var VIDEO_H = 357;
+    var VIDEO_X = Math.round((1280 - VIDEO_W) / 2);
+    var VIDEO_Y = Math.round((720 - VIDEO_H) / 2);
+    var css = [
+        "#bgmovie{",
+        "position:absolute!important;",
+        "width:" + VIDEO_W + "px!important;",
+        "height:" + VIDEO_H + "px!important;",
+        "left:" + VIDEO_X + "px!important;",
+        "top:" + VIDEO_Y + "px!important;",
+        "object-fit:contain!important;",
+        "background:#000!important;",
+        "}"
+    ].join("");
+    var style = document.getElementById("inline_movie_style");
+    if (!style) {
+        style = document.createElement("style");
+        style.id = "inline_movie_style";
+        document.head.appendChild(style);
+    }
+    style.textContent = css;
+
     function _initVideo(v) {
-        v.style.width  = "640px";
-        v.style.height = "360px";
-        v.style.left   = "320px";
-        v.style.top    = "180px";
-        v.currentTime  = 3.5;
+        v.style.width  = VIDEO_W + "px";
+        v.style.height = VIDEO_H + "px";
+        v.style.left   = VIDEO_X + "px";
+        v.style.top    = VIDEO_Y + "px";
+        v.style.objectFit = "contain";
+        v.currentTime  = 0;
     }
     var v = document.getElementById("bgmovie");
     if (v) {
