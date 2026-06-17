@@ -72,6 +72,17 @@ $('#_sound_notice').on('click', function() {
     }
   } catch(e) { console.error("[sound notice readyAudio]", e); }
 
+  // タイトルBGMをオーディオAPIが解放されたタイミングで先行バッファリング
+  // opening splash 中にデコードを済ませ、title.ks 到達時に即再生できるようにする
+  try {
+    if (!window._nagiOpPreload) {
+      window._nagiOpPreload = new Audio('./data/bgm/op.mp3');
+      window._nagiOpPreload.preload = 'auto';
+      window._nagiOpPreload.muted = true;
+      window._nagiOpPreload.load();
+    }
+  } catch(e) {}
+
   $notice.find('p').eq(2).text('L O A D I N G').css('letter-spacing', '0.32em');
   $notice.find('div').first().append(
     '<p id="_sound_notice_progress" style="font-size:11px;color:#a07840;letter-spacing:0.12em;margin:18px 0 0;">0%</p>'

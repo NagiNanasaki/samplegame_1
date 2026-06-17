@@ -44,16 +44,16 @@
 ; thema_nagi_1 プラグインのマクロ。fixlayer にボタンを配置する
 [tsw_button]
 
+; キャラクター・BGMをセリフより前に準備（WEB版でのロード時差を防ぐ）
+[chara_show name="tensi" top=50]
+[playbgm storage="bgm1.mp3" loop="true" volume="80" ]
+
 ;-------------------------------------------
 ; 会話開始
 ;-------------------------------------------
 
 # 主人公
 「……ん……」[p]
-
-; キャラクター「tensi」を画面に表示（top=50 : 上から50px位置）
-[chara_show name="tensi" top=50]
-[playbgm storage="bgm1.mp3" loop="true" volume="80" ]
 
 # ???
 「やっと起きたかい」[p]

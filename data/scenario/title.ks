@@ -75,7 +75,7 @@ try {
     TYRANO.kag.ftag.startTag('playbgm', {storage:'op.mp3', loop:'true', stop:'true'});
   };
   if (TYRANO.kag.tmp.ready_audio) {
-    setTimeout(playTitleBgm, 0);
+    playTitleBgm();
   } else {
     $('.tyrano_base').one('click.title_bgm', function() {
       TYRANO.kag.readyAudio();
