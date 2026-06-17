@@ -61,11 +61,9 @@ $('.tyrano_base').append(
   '</div>' +
   '</div>'
 );
-var _soundNoticeStarted = false;
-$('#_sound_notice').on('click', function() {
-  if (_soundNoticeStarted) return;
-  _soundNoticeStarted = true;
+$('#_sound_notice').one('click', function() {
   var $notice = $(this);
+  $notice.css('pointer-events', 'none');
   try {
     if (TYRANO.kag && !TYRANO.kag.tmp.ready_audio) {
       TYRANO.kag.readyAudio();
